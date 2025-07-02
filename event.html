@@ -214,7 +214,13 @@
         </h2>
       </div>
       <div class="card-body p-0 table-container">
-        <table class="table" id="event-table">
+        <div id="event-loading" style="padding:2rem;text-align:center;display:none;">
+          <div class="spinner-border text-primary" role="status" style="width:2.5rem;height:2.5rem;">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <div style="margin-top:1rem;color:#64748b;">กำลังโหลดข้อมูลเหตุการณ์...</div>
+        </div>
+        <table class="table" id="event-table" style="display:none;">
           <thead>
             <tr>
               <th><i class="bi bi-hash" aria-label="ลำดับ"></i> ลำดับ</th>
@@ -240,21 +246,42 @@
 <script>
 const API_BASE = "https://script.google.com/macros/s/AKfycbwIMT2pgUPQXxrf1D7yuiqLbtcCyyMCOWvAZZKRDQNOaonKix2YUzQs4Aog0qLTrJosww/exec";
 
+let firstLoad = true;
+function showEventLoading(show) {
+  document.getElementById('event-loading').style.display = show ? '' : 'none';
+  document.getElementById('event-table').style.display = show ? 'none' : '';
+}
+
 function fetchAndRenderEvent() {
+  if (firstLoad) {
+    showEventLoading(true);
+  }
   fetch(`${API_BASE}?sheet=event`)
     .then(res => res.json())
     .then(data => {
       localStorage.setItem('event', JSON.stringify(data));
       renderEventTable(data);
       updateRefreshTime();
+      if (firstLoad) {
+        showEventLoading(false);
+        firstLoad = false;
+      }
     })
     .catch(() => {
       const cached = localStorage.getItem('event');
       if (cached) {
         renderEventTable(JSON.parse(cached));
         document.getElementById('event-refresh').textContent = "อัปเดตล่าสุดจากแคช: " + new Date().toLocaleTimeString('th-TH');
+        if (firstLoad) {
+          showEventLoading(false);
+          firstLoad = false;
+        }
       } else {
         document.getElementById('event-refresh').textContent = "ไม่สามารถโหลดข้อมูลได้";
+        if (firstLoad) {
+          showEventLoading(false);
+          firstLoad = false;
+        }
       }
     });
 }
@@ -276,6 +303,10 @@ function renderEventTable(data) {
   tbody.innerHTML = "";
   // เรียงลำดับจากใหม่สุดไปเก่าสุด
   data.sort((a, b) => (b.no || 0) - (a.no || 0));
+  if (!data || data.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;color:#64748b;">ไม่พบข้อมูลเหตุการณ์</td></tr>`;
+    return;
+  }
   data.forEach(row => {
     tbody.innerHTML += `
       <tr>

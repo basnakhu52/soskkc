@@ -289,7 +289,13 @@
         </h2>
       </div>
       <div class="card-body p-0 table-container">
-        <table class="table" id="equipment-table">
+        <div id="equipment-loading" style="padding:2rem;text-align:center;display:none;">
+          <div class="spinner-border text-primary" role="status" style="width:2.5rem;height:2.5rem;">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <div style="margin-top:1rem;color:#64748b;">กำลังโหลดข้อมูลอุปกรณ์...</div>
+        </div>
+        <table class="table" id="equipment-table" style="display:none;">
           <thead>
             <tr>
               <th><i class="bi bi-hash" aria-label="ลำดับ"></i> ลำดับ</th>
@@ -321,21 +327,42 @@
     
 
 
+    let firstLoad = true;
+    function showEquipmentLoading(show) {
+      document.getElementById('equipment-loading').style.display = show ? '' : 'none';
+      document.getElementById('equipment-table').style.display = show ? 'none' : '';
+    }
+
     function fetchAndRenderEquipment() {
+      if (firstLoad) {
+        showEquipmentLoading(true);
+      }
       fetch(`${API_BASE}?sheet=equipment`)
         .then(res => res.json())
         .then(data => {
           localStorage.setItem('equipment', JSON.stringify(data));
           renderEquipmentTable(data);
           updateRefreshTime();
+          if (firstLoad) {
+            showEquipmentLoading(false);
+            firstLoad = false;
+          }
         })
         .catch(() => {
           const cached = localStorage.getItem('equipment');
           if (cached) {
             renderEquipmentTable(JSON.parse(cached));
             document.getElementById('equipment-refresh').textContent = "อัปเดตล่าสุดจากแคช: " + new Date().toLocaleTimeString('th-TH');
+            if (firstLoad) {
+              showEquipmentLoading(false);
+              firstLoad = false;
+            }
           } else {
             document.getElementById('equipment-refresh').textContent = "ไม่สามารถโหลดข้อมูลได้";
+            if (firstLoad) {
+              showEquipmentLoading(false);
+              firstLoad = false;
+            }
           }
         });
     }
@@ -355,17 +382,18 @@
     function renderEquipmentTable(data) {
       const tbody = document.querySelector('#equipment-table tbody');
       tbody.innerHTML = "";
-      
       // เรียงลำดับจากใหม่สุดไปเก่าสุด
       data.sort((a, b) => (b.no || 0) - (a.no || 0));
-      
+      if (!data || data.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:#64748b;">ไม่พบข้อมูลอุปกรณ์</td></tr>`;
+        return;
+      }
       data.forEach(row => {
         const phoneLink = row.phone ? 
           `<a href="tel:${row.phone}" class="phone-link">
             <i class="bi bi-telephone"></i>
             ${row.phone}
           </a>` : '-';
-        
         tbody.innerHTML += `
           <tr>
             <td>${row.no || "-"}</td>
