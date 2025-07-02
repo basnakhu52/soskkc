@@ -120,6 +120,26 @@
     border-bottom: 2px solid #e2e8f0;
     text-align: left;
   }
+  /* กำหนดความกว้างคงที่ให้คอลัมน์เหตุการณ์ */
+  .table th.event-col, .table td.event-col {
+    width: 800px;
+    max-width: 900px;
+    white-space: normal;
+    word-break: break-word;
+    overflow-wrap: break-word;
+  }
+  /* กำหนดความกว้างคงที่ให้คอลัมน์ลำดับและเวลา */
+  .table th.no-col, .table td.no-col {
+    width: 120px;
+    max-width: 170px;
+    text-align: center;
+  }
+  .table th.time-col, .table td.time-col {
+    width: 160px;
+    max-width: 200px;
+    text-align: center;
+    white-space: nowrap;
+  }
   .table tbody tr {
     transition: all 0.2s ease;
   }
@@ -223,9 +243,9 @@
         <table class="table" id="event-table" style="display:none;">
           <thead>
             <tr>
-              <th><i class="bi bi-hash" aria-label="ลำดับ"></i> ลำดับ</th>
-              <th><i class="bi bi-clock" aria-label="เวลา"></i> เวลา</th>
-              <th><i class="bi bi-exclamation-circle" aria-label="เหตุการณ์"></i> เหตุการณ์</th>
+              <th class="no-col"><i class="bi bi-hash" aria-label="ลำดับ"></i> ลำดับ</th>
+              <th class="time-col"><i class="bi bi-clock" aria-label="เวลา"></i> เวลา</th>
+              <th class="event-col"><i class="bi bi-exclamation-circle" aria-label="เหตุการณ์"></i> เหตุการณ์</th>
               <th><i class="bi bi-chat-left-text" aria-label="หมายเหตุ"></i> หมายเหตุ</th>
             </tr>
           </thead>
@@ -309,22 +329,34 @@ function updateRefreshTime() {
 function renderEventTable(data) {
   const tbody = document.querySelector('#event-table tbody');
   tbody.innerHTML = "";
-  // เรียงลำดับจากใหม่สุดไปเก่าสุด
-  data.sort((a, b) => (b.no || 0) - (a.no || 0));
+  // เรียงลำดับตามเวลาใหม่สุดอยู่บนสุด (time: "HH.mmน.")
+  function parseTime(str) {
+    // รองรับรูปแบบ "09.00น." หรือ "09.12 น." หรือ "9.00น." (มี/ไม่มีช่องว่าง)
+    if (!str) return 0;
+    const match = str.match(/(\d{1,2})\.(\d{2})/);
+    if (!match) return 0;
+    const h = parseInt(match[1], 10);
+    const m = parseInt(match[2], 10);
+    return h * 60 + m;
+  }
+  data.sort((a, b) => parseTime(b.time) - parseTime(a.time));
   if (!data || data.length === 0) {
     tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;color:#64748b;">ไม่พบข้อมูลเหตุการณ์</td></tr>`;
     return;
   }
-  data.forEach(row => {
+  // สร้างลำดับใหม่: แถวล่างสุด (เก่าสุด) = 1, ไล่ขึ้นไปจนถึงแถวบนสุด (ใหม่สุด)
+  for (let i = 0; i < data.length; i++) {
+    const row = data[i];
+    const rowNo = data.length - i; // แถวบนสุด (ใหม่สุด) = จำนวนแถว, แถวล่างสุด = 1
     tbody.innerHTML += `
       <tr>
-        <td>${row.no || "-"}</td>
-        <td>${row.time || "-"}</td>
-        <td>${row.event || "-"}</td>
+        <td class="no-col">${rowNo}</td>
+        <td class="time-col">${row.time || "-"}</td>
+        <td class="event-col">${row.event || "-"}</td>
         <td>${row.note || "-"}</td>
       </tr>
     `;
-  });
+  }
 }
 
 // อัปเดตข้อมูลทุก 5 วินาที

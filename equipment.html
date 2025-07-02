@@ -391,13 +391,25 @@
     function renderEquipmentTable(data) {
       const tbody = document.querySelector('#equipment-table tbody');
       tbody.innerHTML = "";
-      // เรียงลำดับจากใหม่สุดไปเก่าสุด
-      data.sort((a, b) => (b.no || 0) - (a.no || 0));
+      // เรียงลำดับตามเวลาใหม่สุดอยู่บนสุด (time: "HH.mmน.")
+      function parseTime(str) {
+        // รองรับรูปแบบ "09.00น." หรือ "09.12 น." หรือ "9.00น." (มี/ไม่มีช่องว่าง)
+        if (!str) return 0;
+        const match = str.match(/(\d{1,2})\.(\d{2})/);
+        if (!match) return 0;
+        const h = parseInt(match[1], 10);
+        const m = parseInt(match[2], 10);
+        return h * 60 + m;
+      }
+      data.sort((a, b) => parseTime(b.time) - parseTime(a.time));
       if (!data || data.length === 0) {
         tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:#64748b;">ไม่พบข้อมูลอุปกรณ์</td></tr>`;
         return;
       }
-      data.forEach(row => {
+      // สร้างลำดับใหม่: แถวล่างสุด (เก่าสุด) = 1, ไล่ขึ้นไปจนถึงแถวบนสุด (ใหม่สุด)
+      for (let i = 0; i < data.length; i++) {
+        const row = data[i];
+        const rowNo = data.length - i; // แถวบนสุด (ใหม่สุด) = จำนวนแถว, แถวล่างสุด = 1
         const phoneLink = row.phone ? 
           `<a href="tel:${row.phone}" class="phone-link">
             <i class="bi bi-telephone"></i>
@@ -405,7 +417,7 @@
           </a>` : '-';
         tbody.innerHTML += `
           <tr>
-            <td>${row.no || "-"}</td>
+            <td>${rowNo}</td>
             <td>${row.time || "-"}</td>
             <td>${row.govement || "-"}</td>
             <td>${row.support_list || "-"}</td>
@@ -413,7 +425,7 @@
             <td>${phoneLink}</td>
           </tr>
         `;
-      });
+      }
     }
     
     // อัปเดตข้อมูลทุก 5 วินาที
