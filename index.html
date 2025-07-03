@@ -22,9 +22,9 @@
       align-items: center;
     }
     .center-container {
-      max-width: 600px;
+      max-width: 900px;
       margin: 0 auto;
-      padding: 2.5rem 1.5rem 2rem 1.5rem;
+      padding: 2.5rem 2.5rem 2rem 2.5rem;
       background: #fff;
       border-radius: 24px;
       box-shadow: 0 8px 32px 0 rgba(80,120,200,0.10);
@@ -103,28 +103,69 @@
     </div>
     <div class="main-title">แดชบอร์ดศูนย์กลางข้อมูล</div>
     <div class="subtitle">เลือกดูข้อมูลที่ต้องการสำหรับท่าอากาศยานขอนแก่น</div>
-    <div class="dashboard-links">
-      <a href="event.html" class="dashboard-link">
+    <div class="dashboard-links" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; margin-bottom: 2.5rem;">
+      <a href="event.html" class="dashboard-link" style="grid-column: 1;">
         <i class="bi bi-clipboard-data"></i>
-        รายงานเหตุการณ์ (Event Dashboard)
+        รายงานเหตุการณ์<br>(Event Dashboard)
       </a>
-      <a href="equipment.html" class="dashboard-link">
+      <a href="equipment.html" class="dashboard-link" style="grid-column: 2;">
         <i class="bi bi-tools"></i>
-        รายงานอุปกรณ์สนับสนุน (Equipment Dashboard)
+        รายงานอุปกรณ์สนับสนุน<br>(Equipment Dashboard)
       </a>
-      <a href="livepeople.html" class="dashboard-link" style="background:linear-gradient(90deg,#2563eb 60%,#6366f1 100%);color:#fff;">
+      <a href="livepeople.html" class="dashboard-link" style="background:linear-gradient(90deg,#2563eb 60%,#6366f1 100%);color:#fff; grid-column: 1;">
         <i class="bi bi-people-fill"></i>
-        รายงานผู้รอดชีวิต (Live People Dashboard)
+        รายงานผู้ประสบภัย<br>(Live People Dashboard)
       </a>
-      <a href="https://docs.google.com/spreadsheets/d/1FEyl81GXg8y4c1J_SN0kadOK6sp5DVFcb3pF-CpHcAE/edit?usp=sharing" target="_blank" class="dashboard-link" style="background:linear-gradient(90deg,#059669 60%,#10b981 100%);color:#fff;">
+      <a href="https://docs.google.com/spreadsheets/d/1FEyl81GXg8y4c1J_SN0kadOK6sp5DVFcb3pF-CpHcAE/edit?usp=sharing" target="_blank" class="dashboard-link" style="background:linear-gradient(90deg,#059669 60%,#10b981 100%);color:#fff; grid-column: 2;">
         <i class="bi bi-database-fill-gear"></i>
         แก้ไขข้อมูล
       </a>
+      <div style="grid-column: 1 / span 2; display: flex; justify-content: center; gap: 1.5rem; margin-top: 0.5rem;">
+        <a href="overall.html" title="3-Panel: Event + Equipment" class="panel-link panel-link-3">
+          <i class="bi bi-columns-gap"></i>
+          <span style="margin-left: 0.7rem; font-size: 1.08rem; font-weight: 600;">3-Panel</span>
+        </a>
+        <a href="2side.html" title="2-Panel: Event + Equipment (Text)" class="panel-link panel-link-2">
+          <i class="bi bi-layout-sidebar-inset"></i>
+          <span style="margin-left: 0.7rem; font-size: 1.08rem; font-weight: 600;">2-Panel</span>
+        </a>
+      </div>
     </div>
     <div class="footer">
       <i class="bi bi-c-circle"></i> พัฒนาโดย Bas-KKC
     </div>
   </div>
+  <style>
+    .panel-link {
+      background: linear-gradient(90deg,#6366f1 0%,#2563eb 100%);
+      color: #fff !important;
+      border-radius: 16px;
+      padding: 0.9rem 1.5rem;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      box-shadow: 0 2px 12px 0 rgba(37,99,235,0.10);
+      text-decoration: none;
+      transition: background 0.18s, color 0.18s, transform 0.15s, box-shadow 0.15s;
+      font-weight: 600;
+    }
+    .panel-link-3 {
+      background: linear-gradient(90deg,#6366f1 0%,#2563eb 100%);
+    }
+    .panel-link-2 {
+      background: linear-gradient(90deg,#f59e42 0%,#fbbf24 100%);
+      color: #fff !important;
+    }
+    .panel-link:hover {
+      background: linear-gradient(90deg,#1e40af 0%,#2563eb 100%) !important;
+      color: #fff !important;
+      transform: translateY(-3px) scale(1.04);
+      box-shadow: 0 6px 24px 0 rgba(37,99,235,0.13);
+    }
+    .panel-link-2:hover {
+      background: linear-gradient(90deg,#f59e42 0%,#f59e42 100%) !important;
+    }
+  </style>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

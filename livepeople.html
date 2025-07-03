@@ -117,47 +117,72 @@
     text-transform: uppercase;
   }
   .summary-card .value {
-    font-size: 3rem;
+    font-size: 2.4rem;
     font-weight: 800;
     margin-bottom: 0.1rem;
     letter-spacing: 0.01em;
     line-height: 1.2;
   }
   .summary-card.green {
-    border-color: #22c55e;
-    box-shadow: 0 2px 8px 0 rgba(16,185,129,0.13);
-    background: linear-gradient(120deg, #e6faed 60%, #f1f6fd 100%);
+    border-color: #10b981;
+    background: #10b981 !important;
+    color: #fff !important;
+    box-shadow: 0 4px 18px 0 rgba(16,185,129,0.13);
   }
-  .summary-card.green .value { color: #10b981; }
+  .summary-card.green .label,
+  .summary-card.green .value,
+  .summary-card.green i {
+    color: #fff !important;
+  }
   .summary-card.yellow {
-    border-color: #eab308;
-    box-shadow: 0 2px 8px 0 rgba(245,158,11,0.13);
-    background: linear-gradient(120deg, #fffbe6 60%, #f1f6fd 100%);
+    border-color: #f59e0b;
+    background: #f59e0b !important;
+    color: #fff !important;
+    box-shadow: 0 4px 18px 0 rgba(245,158,11,0.13);
   }
-  .summary-card.yellow .value { color: #f59e0b; }
+  .summary-card.yellow .label,
+  .summary-card.yellow .value,
+  .summary-card.yellow i {
+    color: #fff !important;
+  }
   .summary-card.red {
     border-color: #ef4444;
-    box-shadow: 0 2px 8px 0 rgba(239,68,68,0.13);
-    background: linear-gradient(120deg, #ffeaea 60%, #f1f6fd 100%);
+    background: #ef4444 !important;
+    color: #fff !important;
+    box-shadow: 0 4px 18px 0 rgba(239,68,68,0.13);
   }
-  .summary-card.red .value { color: #ef4444; }
+  .summary-card.red .label,
+  .summary-card.red .value,
+  .summary-card.red i {
+    color: #fff !important;
+  }
   .summary-card.black {
-    border-color: #334155;
-    box-shadow: 0 2px 8px 0 rgba(34,34,34,0.13);
-    background: linear-gradient(120deg, #e6e8ea 60%, #f1f6fd 100%);
+    border-color: #222;
+    background: #222 !important;
+    color: #fff !important;
+    box-shadow: 0 4px 18px 0 rgba(34,34,34,0.13);
   }
-  .summary-card.black .value { color: #222; }
+  .summary-card.black .label,
+  .summary-card.black .value,
+  .summary-card.black i {
+    color: #fff !important;
+  }
   .summary-card.total {
     border-color: #2563eb;
-    box-shadow: 0 2px 8px 0 rgba(37,99,235,0.13);
-    background: linear-gradient(120deg, #e0edff 60%, #f1f6fd 100%);
+    background: #2563eb !important;
+    color: #fff !important;
+    box-shadow: 0 4px 18px 0 rgba(37,99,235,0.13);
   }
-  .summary-card.total .value { color: #2563eb; }
+  .summary-card.total .label,
+  .summary-card.total .value,
+  .summary-card.total i {
+    color: #fff !important;
+  }
   .summary-dashboard {
     margin-bottom: 0.5rem;
   }
   .title-icon {
-    background-color: var(--primary-color);
+    background-color: #05975d;
     color: white;
     width: 48px;
     height: 48px;
@@ -191,7 +216,7 @@
     margin-bottom: 2rem;
   }
   .card-header {
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    background: linear-gradient(135deg, #06832d, #2563eb);
     color: white;
     padding: 1.25rem 1.5rem;
     border-bottom: none;
@@ -385,7 +410,7 @@
             <i class="bi bi-people-fill"></i>
           </div>
           <div style="flex:1;min-width:0;">
-            <h1 class="dashboard-title" style="margin-bottom:0.2rem;">รายงานผู้รอดชีวิต</h1>
+            <h1 class="dashboard-title" style="margin-bottom:0.2rem;">รายงานผู้ประสบภัย</h1>
             <div class="refresh-info">
               <i class="bi bi-arrow-clockwise refresh-icon"></i>
               <span id="livepeople-refresh">กำลังอัปเดตข้อมูล...</span>
@@ -394,7 +419,7 @@
         </div>
         <div class="summary-dashboard">
           <div class="summary-card total">
-            <div class="label"><i class="bi bi-people-fill" style="color:#2563eb;margin-right:0.4em;"></i>รวมผู้รอดชีวิต</div>
+            <div class="label"><i class="bi bi-people-fill" style="color:#2563eb;margin-right:0.4em;"></i>รวมทั้งหมด</div>
             <div class="value" id="sum-total">-</div>
           </div>
           <div class="summary-card green">
@@ -420,7 +445,7 @@
       <div class="card-header">
         <h2 class="card-title">
           <i class="bi bi-list-ol"></i>
-          รายงานจำนวนยอดผู้รอดชีวิต
+          รายงานจำนวนยอดผู้ประสบภัย
         </h2>
       </div>
       <div class="card-body p-0 table-container">
@@ -428,7 +453,7 @@
           <div class="spinner-border text-primary" role="status" style="width:2.5rem;height:2.5rem;">
             <span class="visually-hidden">Loading...</span>
           </div>
-          <div style="margin-top:1rem;color:#64748b;">กำลังโหลดข้อมูลกำลังพล...</div>
+          <div style="margin-top:1rem;color:#64748b;">กำลังโหลดข้อมูลผู้รอดชีวิต...</div>
         </div>
         <table class="table" id="livepeople-table" style="display:none;">
           <thead>
@@ -545,21 +570,21 @@
         const row = data[i];
         const rowNo = data.length - i;
         // รวมแต่ละสี (แปลงเป็นตัวเลข ถ้าไม่ใช่ตัวเลขให้เป็น 0)
-        sumGreen += parseInt(row.green) || 0;
-        sumYellow += parseInt(row.yellow) || 0;
-        sumRed += parseInt(row.red) || 0;
-        sumBlack += parseInt(row.black) || 0;
-        sumTotal += parseInt(row.total) || 0;
+        sumGreen += parseInt(row.เขียว) || 0;
+        sumYellow += parseInt(row.เหลือง) || 0;
+        sumRed += parseInt(row.แดง) || 0;
+        sumBlack += parseInt(row.ดำ) || 0;
+        sumTotal += parseInt(row.รวม) || 0;
         tbody.innerHTML += `
           <tr>
             <td class="no-col">${rowNo}</td>
             <td class="time-col">${row.time || "-"}</td>
-            <td class="livepeople-col">${row.livepeople || "-"}</td>
-            <td class="status-col">${row.green || "-"}</td>
-            <td class="status-col">${row.yellow || "-"}</td>
-            <td class="status-col">${row.red || "-"}</td>
-            <td class="status-col">${row.black || "-"}</td>
-            <td class="total-col">${row.total || "-"}</td>
+            <td class="livepeople-col">${row.บริเวณ || "-"}</td>
+            <td class="status-col">${row.เขียว || "-"}</td>
+            <td class="status-col">${row.เหลือง || "-"}</td>
+            <td class="status-col">${row.แดง || "-"}</td>
+            <td class="status-col">${row.ดำ || "-"}</td>
+            <td class="total-col">${row.รวม || "-"}</td>
           </tr>
         `;
       }
