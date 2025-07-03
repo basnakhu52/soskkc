@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>แดชบอร์ดกำลังพล - ท่าอากาศยานขอนแก่น</title>
+  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/2991/2991108.png" type="image/png">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+  :root {
+    --primary-color: #2563eb;
+    --secondary-color: #1e40af;
+    --accent-color: #3b82f6;
+    --light-bg: #f8fafc;
+    --card-bg: #ffffff;
+    --text-dark: #1e293b;
+    --text-light: #64748b;
+    --success-color: #10b981;
+    --warning-color: #f59e0b;
+    --danger-color: #ef4444;
+  }
+  body {
+    background-color: var(--light-bg);
+    min-height: 100vh;
+    font-family: 'Sarabun', sans-serif;
+    color: var(--text-dark);
+    padding: 0;
+    margin: 0;
+  }
+  .dashboard-container {
+    max-width: 1800px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+  }
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .title-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    flex: 1 1 0%;
+  }
+  .dashboard-title {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin: 0;
+  }
+  .summary-dashboard {
+    display: flex;
+    gap: 1.1rem;
+    margin: 1.1rem 0 0.5rem 0;
+    flex-wrap: wrap;
+    justify-content: stretch;
+    align-items: stretch;
+    width: 100%;
+    max-width: 100%;
+  }
+  @media (max-width: 900px) {
+    .summary-dashboard {
+      flex-wrap: wrap;
+      gap: 0.7rem;
+    }
+    .summary-card {
+      width: 198px !important;
+      min-width: 198px !important;
+      max-width: 198px !important;
+      height: 90px !important;
+      min-height: 90px !important;
+      max-height: 90px !important;
+      flex: 0 0 198px !important;
+      white-space: normal;
+      overflow: visible;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+    }
+  }
+  .summary-card {
+    background: linear-gradient(120deg, #fafdff 60%, #f1f6fd 100%);
+    border: 1.2px solid #e3eaf7;
+    border-radius: 14px;
+    box-shadow: 0 2px 8px 0 rgba(80,120,200,0.06);
+    padding: 1.05rem 1.4rem 1rem 1.4rem;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    word-break: break-word;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    font-size: 1.09rem;
+    font-weight: 500;
+    color: #1e293b;
+    position: relative;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    margin-bottom: 0.5rem;
+    outline: none;
+    flex: 1 1 0%;
+  }
+  .summary-card .label {
+    font-size: 1.18rem;
+    color: #000000;
+    margin-bottom: 0.13rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+  }
+  .summary-card .value {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 0.1rem;
+    letter-spacing: 0.01em;
+    line-height: 1.2;
+  }
+  .summary-card.green {
+    border-color: #22c55e;
+    box-shadow: 0 2px 8px 0 rgba(16,185,129,0.13);
+    background: linear-gradient(120deg, #e6faed 60%, #f1f6fd 100%);
+  }
+  .summary-card.green .value { color: #10b981; }
+  .summary-card.yellow {
+    border-color: #eab308;
+    box-shadow: 0 2px 8px 0 rgba(245,158,11,0.13);
+    background: linear-gradient(120deg, #fffbe6 60%, #f1f6fd 100%);
+  }
+  .summary-card.yellow .value { color: #f59e0b; }
+  .summary-card.red {
+    border-color: #ef4444;
+    box-shadow: 0 2px 8px 0 rgba(239,68,68,0.13);
+    background: linear-gradient(120deg, #ffeaea 60%, #f1f6fd 100%);
+  }
+  .summary-card.red .value { color: #ef4444; }
+  .summary-card.black {
+    border-color: #334155;
+    box-shadow: 0 2px 8px 0 rgba(34,34,34,0.13);
+    background: linear-gradient(120deg, #e6e8ea 60%, #f1f6fd 100%);
+  }
+  .summary-card.black .value { color: #222; }
+  .summary-card.total {
+    border-color: #2563eb;
+    box-shadow: 0 2px 8px 0 rgba(37,99,235,0.13);
+    background: linear-gradient(120deg, #e0edff 60%, #f1f6fd 100%);
+  }
+  .summary-card.total .value { color: #2563eb; }
+  .summary-dashboard {
+    margin-bottom: 0.5rem;
+  }
+  .title-icon {
+    background-color: var(--primary-color);
+    color: white;
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+  }
+  .refresh-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-light);
+    font-size: 0.9rem;
+  }
+  .refresh-icon {
+    color: var(--accent-color);
+    animation: spin 2s linear infinite;
+  }
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  .card {
+    background-color: var(--card-bg);
+    border-radius: 16px;
+    border: none;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    margin-bottom: 2rem;
+  }
+  .card-header {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    padding: 1.25rem 1.5rem;
+    border-bottom: none;
+  }
+  .card-title {
+    font-weight: 600;
+    margin: 0;
+    font-size: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .table-container {
+    overflow-x: auto;
+    padding: 0 0.5rem;
+  }
+  .table {
+    width: 100%;
+    min-width: 900px;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 0;
+  }
+  .table thead th {
+    background-color: #f1f5f9;
+    color: var(--text-dark);
+    font-weight: 600;
+    padding: 1rem 1.25rem;
+    border-bottom: 2px solid #e2e8f0;
+    text-align: left;
+  }
+  .table th.no-col, .table td.no-col {
+    width: 70px;
+    max-width: 70px;
+    text-align: center;
+  }
+  .table th.time-col, .table td.time-col {
+    width: 110px;
+    max-width: 110px;
+    text-align: center;
+    white-space: nowrap;
+  }
+  .table th.livepeople-col, .table td.livepeople-col {
+    width: 200px;
+    max-width: 250px;
+    word-break: break-word;
+  }
+  .table th.status-col, .table td.status-col {
+    width: 90px;
+    max-width: 100px;
+    text-align: center;
+  }
+  .table th.total-col, .table td.total-col {
+    width: 90px;
+    max-width: 100px;
+    text-align: center;
+    font-weight: bold;
+  }
+  /* Zebra striping for table rows */
+  .table tbody tr {
+    transition: all 0.2s ease;
+    background: #f8fafc !important;
+  }
+  .table tbody tr:nth-child(odd) {
+    background: #f1f6fd !important;
+  }
+  .table tbody tr:nth-child(even) {
+    background: #e8eef7 !important;
+  }
+  .table tbody tr:hover {
+    background: #e0edfb !important;
+    box-shadow: 0 4px 24px 0 rgba(80,120,200,0.09);
+    position: relative;
+    z-index: 2;
+    transition: background 0.18s, box-shadow 0.18s;
+  }
+  .table tbody td {
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid #e2e8f0;
+    vertical-align: middle;
+  }
+  .footer {
+    text-align: center;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e2e8f0;
+  }
+  .action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    text-decoration: none;
+  }
+  .btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+  }
+  .btn-primary:hover {
+    background-color: var(--secondary-color);
+    color: white;
+  }
+  .btn-outline {
+    background-color: transparent;
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+  }
+  .btn-outline:hover {
+    background-color: #eff6ff;
+  }
+  @media (max-width: 900px) {
+    .dashboard-container {
+      padding: 1.5rem 1rem;
+    }
+    .header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .dashboard-title {
+      font-size: 1.5rem;
+    }
+    .card-header {
+      padding: 1rem;
+    }
+    .card-title {
+      font-size: 1.1rem;
+    }
+    .table thead th,
+    .table tbody td {
+      padding: 0.75rem;
+    }
+  }
+  .summary-anim {
+    position: absolute;
+    right: 1.2rem;
+    top: 0.7rem;
+    font-size: 1.8rem;
+    font-weight: 700;
+    background: rgba(255,255,255,0.95);
+    border-radius: 8px;
+    padding: 0.1em 0.7em;
+    box-shadow: 0 2px 8px 0 rgba(80,120,200,0.08);
+    z-index: 10;
+    opacity: 1;
+    transition: opacity 0.5s, transform 0.5s;
+    pointer-events: none;
+    animation: pop-anim 0.5s cubic-bezier(.4,2,.6,1) 1;
+  }
+  .summary-anim.fade-out {
+    opacity: 0;
+    transform: translateY(-18px) scale(0.95);
+    transition: opacity 0.6s, transform 0.6s;
+  }
+  @keyframes pop-anim {
+    0% { opacity: 0; transform: scale(0.7) translateY(10px); }
+    60% { opacity: 1; transform: scale(1.1) translateY(-4px); }
+    100% { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  .summary-card {
+    position: relative;
+    overflow: visible;
+  }
+  .summary-flash {
+    animation: flash-bg 1.2s cubic-bezier(.4,0,.2,1) 1;
+  }
+  @keyframes flash-bg {
+    0% { box-shadow: 0 0 0 0 #16a34a, 0 2px 8px 0 rgba(80,120,200,0.06); }
+    10% { box-shadow: 0 0 0 8px #16a34a88, 0 2px 8px 0 rgba(80,120,200,0.06); }
+    20% { box-shadow: 0 0 0 0 #16a34a, 0 2px 8px 0 rgba(80,120,200,0.06); }
+    30% { box-shadow: 0 0 0 8px #16a34a88, 0 2px 8px 0 rgba(80,120,200,0.06); }
+    40% { box-shadow: 0 0 0 0 #16a34a, 0 2px 8px 0 rgba(80,120,200,0.06); }
+    50% { box-shadow: 0 0 0 8px #16a34a88, 0 2px 8px 0 rgba(80,120,200,0.06); }
+    60% { box-shadow: 0 0 0 0 #16a34a, 0 2px 8px 0 rgba(80,120,200,0.06); }
+    70% { box-shadow: 0 0 0 8px #16a34a88, 0 2px 8px 0 rgba(80,120,200,0.06); }
+    80% { box-shadow: 0 0 0 0 #16a34a, 0 2px 8px 0 rgba(80,120,200,0.06); }
+    90% { box-shadow: 0 0 0 8px #16a34a88, 0 2px 8px 0 rgba(80,120,200,0.06); }
+    100% { box-shadow: 0 2px 8px 0 rgba(80,120,200,0.06); }
+  }
+  </style>
+</head>
+<body>
+  <div class="dashboard-container">
+    <div class="header">
+      <div class="title-container" style="flex-direction:column;align-items:flex-start;gap:0.5rem;">
+        <div style="display:flex;align-items:center;gap:1rem;width:100%;">
+          <div class="title-icon">
+            <i class="bi bi-people-fill"></i>
+          </div>
+          <div style="flex:1;min-width:0;">
+            <h1 class="dashboard-title" style="margin-bottom:0.2rem;">รายงานผู้รอดชีวิต</h1>
+            <div class="refresh-info">
+              <i class="bi bi-arrow-clockwise refresh-icon"></i>
+              <span id="livepeople-refresh">กำลังอัปเดตข้อมูล...</span>
+            </div>
+          </div>
+        </div>
+        <div class="summary-dashboard">
+          <div class="summary-card total">
+            <div class="label"><i class="bi bi-people-fill" style="color:#2563eb;margin-right:0.4em;"></i>รวมผู้รอดชีวิต</div>
+            <div class="value" id="sum-total">-</div>
+          </div>
+          <div class="summary-card green">
+            <div class="label"><i class="bi bi-person-check-fill" style="color:#10b981;margin-right:0.4em;"></i>สีเขียว</div>
+            <div class="value" id="sum-green">-</div>
+          </div>
+          <div class="summary-card yellow">
+            <div class="label"><i class="bi bi-person-check-fill" style="color:#eab308;margin-right:0.4em;"></i>สีเหลือง</div>
+            <div class="value" id="sum-yellow">-</div>
+          </div>
+          <div class="summary-card red">
+            <div class="label"><i class="bi bi-person-check-fill" style="color:#ef4444;margin-right:0.4em;"></i>สีแดง</div>
+            <div class="value" id="sum-red">-</div>
+          </div>
+          <div class="summary-card black">
+            <div class="label"><i class="bi bi-person-check-fill" style="color:#222;margin-right:0.4em;"></i>สีดำ</div>
+            <div class="value" id="sum-black">-</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title">
+          <i class="bi bi-list-ol"></i>
+          รายงานจำนวนยอดผู้รอดชีวิต
+        </h2>
+      </div>
+      <div class="card-body p-0 table-container">
+        <div id="livepeople-loading" style="padding:2rem;text-align:center;display:none;">
+          <div class="spinner-border text-primary" role="status" style="width:2.5rem;height:2.5rem;">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <div style="margin-top:1rem;color:#64748b;">กำลังโหลดข้อมูลกำลังพล...</div>
+        </div>
+        <table class="table" id="livepeople-table" style="display:none;">
+          <thead>
+            <tr>
+              <th class="no-col">ลำดับ</th>
+              <th class="time-col">เวลา</th>
+              <th class="livepeople-col">บริเวณ</th>
+              <th class="status-col" style="color:#10b981;">Green</th>
+              <th class="status-col" style="color:#f59e0b;">Yellow</th>
+              <th class="status-col" style="color:#ef4444;">Red</th>
+              <th class="status-col" style="color:#222;">Black</th>
+              <th class="total-col">รวม</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="footer">
+      <div style="display:flex;justify-content:center;gap:1rem;flex-wrap:wrap;">
+        <a href="event.html" class="action-btn btn-outline">
+          <i class="bi bi-arrow-left-circle"></i>
+          กลับไปหน้ารายงานเหตุการณ์
+        </a>
+        <a href="https://docs.google.com/spreadsheets/d/1FEyl81GXg8y4c1J_SN0kadOK6sp5DVFcb3pF-CpHcAE/edit?gid=1825844982#gid=1825844982" target="_blank" class="action-btn btn-outline" style="display:flex;align-items:center;gap:0.5rem;">
+          <i class="bi bi-database-fill-gear" style="font-size:1.2rem;"></i>
+          แก้ไขข้อมูล
+        </a>
+        <a href="/" class="action-btn btn-outline" style="display:flex;align-items:center;gap:0.5rem;padding:0.5rem 0.9rem;">
+          <i class="bi bi-house-door-fill" style="font-size:1.1rem;"></i>
+        </a>
+      </div>
+      <div style="margin-top:1.5rem;font-size:0.95rem;color:#94a3b8;">
+        <i class="bi bi-c-circle"></i> พัฒนาโดย Bas-KKC
+      </div>
+    </div>
+  </div>
+  <script>
+    const API_BASE = "https://script.google.com/macros/s/AKfycbwIMT2pgUPQXxrf1D7yuiqLbtcCyyMCOWvAZZKRDQNOaonKix2YUzQs4Aog0qLTrJosww/exec";
+    let firstLoad = true;
+    function showLivePeopleLoading(show) {
+      document.getElementById('livepeople-loading').style.display = show ? '' : 'none';
+      document.getElementById('livepeople-table').style.display = show ? 'none' : '';
+    }
+    function fetchAndRenderLivePeople() {
+      if (firstLoad) {
+        showLivePeopleLoading(true);
+      }
+      fetch(`${API_BASE}?sheet=people_live`)
+        .then(res => res.json())
+        .then(data => {
+          localStorage.setItem('livepeople', JSON.stringify(data));
+          renderLivePeopleTable(data);
+          updateRefreshTime();
+          if (firstLoad) {
+            showLivePeopleLoading(false);
+            firstLoad = false;
+          }
+        })
+        .catch(() => {
+          const cached = localStorage.getItem('livepeople');
+          if (cached) {
+            renderLivePeopleTable(JSON.parse(cached));
+            document.getElementById('livepeople-refresh').textContent = "อัปเดตล่าสุดจากแคช: " + new Date().toLocaleTimeString('th-TH');
+            if (firstLoad) {
+              showLivePeopleLoading(false);
+              firstLoad = false;
+            }
+          } else {
+            document.getElementById('livepeople-refresh').textContent = "ไม่สามารถโหลดข้อมูลได้";
+            if (firstLoad) {
+              showLivePeopleLoading(false);
+              firstLoad = false;
+            }
+          }
+        });
+    }
+    function updateRefreshTime() {
+      const now = new Date();
+      const options = {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false
+      };
+      document.getElementById('livepeople-refresh').textContent =
+        "อัปเดตล่าสุด: " + now.toLocaleTimeString('th-TH', options);
+    }
+    function renderLivePeopleTable(data) {
+      const tbody = document.querySelector('#livepeople-table tbody');
+      tbody.innerHTML = "";
+      // รวมยอดแต่ละสีและรวมทั้งหมด
+      let sumGreen = 0, sumYellow = 0, sumRed = 0, sumBlack = 0, sumTotal = 0;
+      // เรียงลำดับตามเวลาใหม่สุดอยู่บนสุด (time: "HH.mmน.")
+      function parseTime(str) {
+        if (!str) return 0;
+        const match = str.match(/(\d{1,2})\.(\d{2})/);
+        if (!match) return 0;
+        const h = parseInt(match[1], 10);
+        const m = parseInt(match[2], 10);
+        return h * 60 + m;
+      }
+      data.sort((a, b) => parseTime(b.time) - parseTime(a.time));
+      if (!data || data.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;color:#64748b;">ไม่พบข้อมูลกำลังพล</td></tr>`;
+        document.getElementById('sum-total').textContent = '-';
+        document.getElementById('sum-green').textContent = '-';
+        document.getElementById('sum-yellow').textContent = '-';
+        document.getElementById('sum-red').textContent = '-';
+        document.getElementById('sum-black').textContent = '-';
+        return;
+      }
+      for (let i = 0; i < data.length; i++) {
+        const row = data[i];
+        const rowNo = data.length - i;
+        // รวมแต่ละสี (แปลงเป็นตัวเลข ถ้าไม่ใช่ตัวเลขให้เป็น 0)
+        sumGreen += parseInt(row.green) || 0;
+        sumYellow += parseInt(row.yellow) || 0;
+        sumRed += parseInt(row.red) || 0;
+        sumBlack += parseInt(row.black) || 0;
+        sumTotal += parseInt(row.total) || 0;
+        tbody.innerHTML += `
+          <tr>
+            <td class="no-col">${rowNo}</td>
+            <td class="time-col">${row.time || "-"}</td>
+            <td class="livepeople-col">${row.livepeople || "-"}</td>
+            <td class="status-col">${row.green || "-"}</td>
+            <td class="status-col">${row.yellow || "-"}</td>
+            <td class="status-col">${row.red || "-"}</td>
+            <td class="status-col">${row.black || "-"}</td>
+            <td class="total-col">${row.total || "-"}</td>
+          </tr>
+        `;
+      }
+      // --- Animated update for summary cards ---
+      function animateCard(id, newValue) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        const prev = parseInt(el.dataset.prevValue || '0', 10);
+        const next = parseInt(newValue, 10);
+        if (!isNaN(prev) && !isNaN(next) && prev !== next) {
+          // Calculate diff
+          const diff = next - prev;
+          // Create animation element
+          const anim = document.createElement('span');
+          anim.className = 'summary-anim';
+          anim.textContent = (diff > 0 ? '+' : '') + diff + ' คน';
+          anim.style.color = diff > 0 ? '#22c55e' : '#ef4444';
+          el.parentElement.appendChild(anim);
+          // Add flash effect
+          el.parentElement.classList.add('summary-flash');
+          setTimeout(() => {
+            anim.classList.add('fade-out');
+            el.parentElement.classList.remove('summary-flash');
+          }, 1800); // เพิ่มระยะเวลาตาม animation
+          setTimeout(() => {
+            if (anim.parentElement) anim.parentElement.removeChild(anim);
+          }, 2300);
+        }
+        el.textContent = newValue + ' คน';
+        el.dataset.prevValue = newValue;
+      }
+      animateCard('sum-total', sumTotal);
+      animateCard('sum-green', sumGreen);
+      animateCard('sum-yellow', sumYellow);
+      animateCard('sum-red', sumRed);
+      animateCard('sum-black', sumBlack);
+    }
+    setInterval(fetchAndRenderLivePeople, 5000);
+    fetchAndRenderLivePeople();
+    // Initialize prevValue for animation
+    ['sum-total','sum-green','sum-yellow','sum-red','sum-black'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.dataset.prevValue = '0';
+    });
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
