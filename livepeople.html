@@ -245,7 +245,7 @@
     color: var(--text-dark);
     font-weight: 600;
     padding: 1rem 1.25rem;
-    border-bottom: 2px solid #e2e8f0;
+    border-bottom: 2px solid #6a1ece;
     text-align: left;
   }
   .table th.no-col, .table td.no-col {
@@ -276,19 +276,19 @@
     font-weight: bold;
   }
   /* Zebra striping for table rows */
+  /* ปรับสีแถวสลับกันให้ดูง่ายขึ้น */
   .table tbody tr {
     transition: all 0.2s ease;
-    background: #f8fafc !important;
   }
-  .table tbody tr:nth-child(odd) {
+  .table tbody tr:nth-child(odd) td {
     background: #f1f6fd !important;
   }
-  .table tbody tr:nth-child(even) {
+  .table tbody tr:nth-child(even) td {
     background: #e8eef7 !important;
   }
-  .table tbody tr:hover {
+  .table tbody tr:hover td {
     background: #e0edfb !important;
-    box-shadow: 0 4px 24px 0 rgba(80,120,200,0.09);
+
     position: relative;
     z-index: 2;
     transition: background 0.18s, box-shadow 0.18s;
@@ -584,10 +584,21 @@
             <td class="status-col">${row.เหลือง || "-"}</td>
             <td class="status-col">${row.แดง || "-"}</td>
             <td class="status-col">${row.ดำ || "-"}</td>
-            <td class="total-col">${row.รวม || "-"}</td>
+            <td class="total-col">${row.รวม ? row.รวม + " คน" : "-"}</td>
           </tr>
         `;
       }
+      // เพิ่มแถวสรุปผลรวมแต่ละคอลัมน์ไว้ท้ายตาราง
+      tbody.innerHTML += `
+        <tr style="font-weight:bold;background:#e0e7ef;">
+          <td class="no-col" colspan="3" style="text-align:right;">รวม</td>
+          <td class="status-col">${sumGreen}</td>
+          <td class="status-col">${sumYellow}</td>
+          <td class="status-col">${sumRed}</td>
+          <td class="status-col">${sumBlack}</td>
+          <td class="total-col">${sumTotal} คน</td>
+        </tr>
+      `;
       // --- Animated update for summary cards ---
       function animateCard(id, newValue) {
         const el = document.getElementById(id);

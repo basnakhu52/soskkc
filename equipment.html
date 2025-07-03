@@ -127,13 +127,27 @@
       border-spacing: 0;
       margin: 0;
     }
+    /* ปรับสีพื้นหลัง td สลับกันให้ดูง่ายขึ้น */
+    .table tbody tr:nth-child(odd) td {
+      background-color: #fff;
+    }
+    .table tbody tr:nth-child(even) td {
+      background-color: #f8fafc;
+    }
+    .table tbody tr:hover td {
+      background: #f5f7fa;
+      position: relative;
+      z-index: 2;
+      transition: background 0.18s, box-shadow 0.18s;
+    }
+    
     
     .table thead th {
       background-color: #f1f5f9;
       color: var(--text-dark);
       font-weight: 600;
       padding: 1rem 1.25rem;
-      border-bottom: 2px solid #e2e8f0;
+      border-bottom: 2px solid #098f3f;
       text-align: left;
     }
     
@@ -406,6 +420,8 @@
         tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:#64748b;">ไม่พบข้อมูลอุปกรณ์</td></tr>`;
         return;
       }
+      // รวมกำลังคน
+      let sumPeople = 0;
       // สร้างลำดับใหม่: แถวล่างสุด (เก่าสุด) = 1, ไล่ขึ้นไปจนถึงแถวบนสุด (ใหม่สุด)
       for (let i = 0; i < data.length; i++) {
         const row = data[i];
@@ -415,6 +431,13 @@
             <i class="bi bi-telephone"></i>
             ${row.phone}
           </a>` : '-';
+        // ดึงเฉพาะตัวเลขจาก row.กำลังคน เช่น "10 คน" หรือ "5" หรือ "-"
+        let people = 0;
+        if (row.กำลังคน) {
+          const match = String(row.กำลังคน).replace(/,/g, '').match(/\d+/);
+          if (match) people = parseInt(match[0], 10);
+        }
+        sumPeople += people;
         tbody.innerHTML += `
           <tr>
             <td>${rowNo}</td>
@@ -426,6 +449,14 @@
           </tr>
         `;
       }
+      // แสดงผลรวมกำลังคนด้านล่างสุด
+      tbody.innerHTML += `
+        <tr style="background:#f1f5f9;font-weight:600;">
+          <td colspan="4" style="text-align:right;">รวมกำลังคน</td>
+          <td style="color:#2563eb;">${sumPeople.toLocaleString()} คน</td>
+          <td></td>
+        </tr>
+      `;
     }
     
     // อัปเดตข้อมูลทุก 5 วินาที
