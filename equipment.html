@@ -423,15 +423,32 @@
       // รวมกำลังคน
       let sumPeople = 0;
       // สร้างลำดับใหม่: แถวล่างสุด (เก่าสุด) = 1, ไล่ขึ้นไปจนถึงแถวบนสุด (ใหม่สุด)
+      // ตรวจสอบข้อมูลใหม่สุดจากรอบก่อนหน้า
+      let prevData = [];
+      try {
+        prevData = JSON.parse(localStorage.getItem('equipment_prev') || '[]');
+      } catch {}
+      let isNewRow = false;
+      if (prevData && prevData.length > 0 && data.length > 0) {
+        const prevFirst = prevData[0];
+        const currFirst = data[0];
+        if (JSON.stringify(prevFirst) !== JSON.stringify(currFirst)) {
+          isNewRow = true;
+        }
+      } else if (data.length > 0 && prevData.length === 0) {
+        isNewRow = true;
+      }
+      localStorage.setItem('equipment_prev', JSON.stringify(data));
+
       for (let i = 0; i < data.length; i++) {
         const row = data[i];
-        const rowNo = data.length - i; // แถวบนสุด (ใหม่สุด) = จำนวนแถว, แถวล่างสุด = 1
+        const rowNo = data.length - i;
+        const isNew = isNewRow && i === 0;
         const phoneLink = row.phone ? 
           `<a href="tel:${row.phone}" class="phone-link">
             <i class="bi bi-telephone"></i>
             ${row.phone}
           </a>` : '-';
-        // ดึงเฉพาะตัวเลขจาก row.กำลังคน เช่น "10 คน" หรือ "5" หรือ "-"
         let people = 0;
         if (row.กำลังคน) {
           const match = String(row.กำลังคน).replace(/,/g, '').match(/\d+/);
@@ -439,13 +456,16 @@
         }
         sumPeople += people;
         tbody.innerHTML += `
-          <tr>
+          <tr class="${isNew ? 'new-row-animate' : ''}">
             <td>${rowNo}</td>
             <td>${row.time || "-"}</td>
             <td>${row.หน่วยงาน || "-"}</td>
             <td>${row.อุปกรณ์สนับสนุน || "-"}</td>
             <td>${row.กำลังคน || "-"}</td>
-            <td>${phoneLink}</td>
+            <td style="position:relative;">
+              ${isNew ? '<span class="new-label new-label-abs">New</span>' : ''}
+              ${phoneLink}
+            </td>
           </tr>
         `;
       }
@@ -459,8 +479,50 @@
       `;
     }
     
+    // Animation CSS for new row and label
+    const style = document.createElement('style');
+    style.innerHTML = `
+      .new-row-animate td,
+      .new-row-animate {
+        animation: newRowFlash 3s ease-in-out 0s 2;
+        background-color: #d1fae5 !important;
+        position: relative;
+      }
+      @keyframes newRowFlash {
+        0% { background-color: #d1fae5; }
+        40% { background-color: #10b981; }
+        60% { background-color: #10b981; }
+        100% { background-color: #d1fae5; }
+      }
+      .new-label {
+        display: inline-block;
+        background: #10b981;
+        color: #fff;
+        font-size: 0.85em;
+        font-weight: 600;
+        border-radius: 6px;
+        padding: 0.15em 0.6em;
+        vertical-align: middle;
+        box-shadow: 0 1px 4px rgba(16,185,129,0.12);
+        letter-spacing: 0.5px;
+        animation: newLabelPop 2s;
+      }
+      .new-label-abs {
+        position: absolute;
+        top: -1.2em;
+        left: 0.2em;
+        z-index: 2;
+        margin: 0;
+      }
+      @keyframes newLabelPop {
+        0% { transform: scale(0.7); opacity: 0; }
+        40% { transform: scale(1.15); opacity: 1; }
+        100% { transform: scale(1); opacity: 1; }
+      }
+    `;
+    document.head.appendChild(style);
     // อัปเดตข้อมูลทุก 5 วินาที
-    setInterval(fetchAndRenderEquipment, 5000);
+    setInterval(fetchAndRenderEquipment, 3000);
     fetchAndRenderEquipment();
   </script>
   
