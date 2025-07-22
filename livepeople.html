@@ -182,7 +182,7 @@
     margin-bottom: 0.5rem;
   }
   .title-icon {
-    background-color: #05975d;
+    background-color: #6109b4;
     color: white;
     width: 48px;
     height: 48px;
@@ -405,18 +405,20 @@
   <div class="dashboard-container">
     <div class="header">
       <div class="title-container" style="flex-direction:column;align-items:flex-start;gap:0.5rem;">
-        <div style="display:flex;align-items:center;gap:1rem;width:100%;">
-          <div class="title-icon">
-            <i class="bi bi-people-fill"></i>
-          </div>
-          <div style="flex:1;min-width:0;">
-            <h1 class="dashboard-title" style="margin-bottom:0.2rem;">รายงานผู้ประสบภัย</h1>
-            <div class="refresh-info">
+          <div style="display:flex;align-items:center;gap:1rem;width:100%;justify-content:space-between;">
+            <div style="display:flex;align-items:center;gap:1rem;min-width:0;">
+              <div class="title-icon">
+                <i class="bi bi-people-fill"></i>
+              </div>
+              <div style="flex:1;min-width:0;">
+                <h1 class="dashboard-title" style="margin-bottom:0.2rem;">รายงานผู้ประสบภัย</h1>
+              </div>
+            </div>
+            <div class="refresh-info" style="margin-left:auto;">
               <i class="bi bi-arrow-clockwise refresh-icon"></i>
               <span id="livepeople-refresh">กำลังอัปเดตข้อมูล...</span>
             </div>
           </div>
-        </div>
         <div class="summary-dashboard">
           <div class="summary-card total">
             <div class="label"><i class="bi bi-people-fill" style="color:#2563eb;margin-right:0.4em;"></i>รวมทั้งหมด</div>
